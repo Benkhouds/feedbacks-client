@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.error-message {
+
+   @apply bg-red-400 w-full p-3 text-center mb-4 block font-medium text-white rounded;
+
+}
