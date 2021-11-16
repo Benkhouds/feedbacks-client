@@ -3,17 +3,18 @@ import apiHeader from '../utils/apiHeader'
 
 export default class DataService{
 
-     static async getPublicContent(cancelToken, accessToken=''){
+     static async getPublicContent(cancelToken, accessToken='', category="", sort="-voteScore"){
          if(accessToken){
-            return apiRoutes.get('/feedbacks/protected/all',{cancelToken,...apiHeader(accessToken) } )             
+            return apiRoutes.get(`/feedbacks/protected/all/?category=${category}&sort=${sort}`,
+            {cancelToken,...apiHeader(accessToken) } )             
         }
-        return apiRoutes.get('/feedbacks',{cancelToken} )
+        return apiRoutes.get(`/feedbacks/?category=${category}&sort=${sort}`,{cancelToken} )
      }
      static async getUserData(accessToken){
         return apiRoutes.post('/auth/refresh-token',{},apiHeader(accessToken))
      }
-     static async getFeedback(id,accessToken){
-         return apiRoutes.get(`/feedbacks/${id}`, apiHeader(accessToken))
+     static async getFeedback(id,cancelToken, accessToken){
+         return apiRoutes.get(`/feedbacks/${id}`,{cancelToken,  ...apiHeader(accessToken)})
      }
      static async addFeedback(title, category, details, accessToken){
          return apiRoutes.post('/feedbacks/', {title , category, details}, apiHeader(accessToken))

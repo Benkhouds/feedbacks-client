@@ -30,7 +30,7 @@ function Feedback({ feedback }) {
   }
 
   return (
-    <div className="flex w-full rounded px-6 py-3 mb-4  bg-white">
+    <div className="flex w-full rounded-md px-6 py-3 mb-4 bg-white">
       <button
         onClick={handleUpVote}
         className={"text-sm w-12 h-12 text-center cursor-pointer bg-indigo-50 px-2 pb-2 pt-1 rounded-lg border-2 border-transparent  hover:border-indigo-500 " + (liked ? 'bg-indigo-300 text-white' : '')}

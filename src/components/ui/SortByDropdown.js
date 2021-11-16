@@ -2,13 +2,29 @@ import { Fragment } from "react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import { Listbox, Transition } from "@headlessui/react";
 
-function Dropdown({ options, onChange, value }) {
+const sortText = (s)=>{
+ switch(s){
+   case '-voteScore': 
+     return 'Most Upvotes'
+   case 'voteScore': 
+     return 'Least Upvotes'
+   case '-commentsCount': 
+      return 'Most Comments'
+   case 'commentsCount': 
+       return 'Least Comments'
+   default: 
+     return 'Most Upvotes'
+ }
+}
+function SortByDropdown({ options, onChange, value }) {
   return (
     <Listbox value={value} onChange={onChange}>
       <div className="relative">
-        <Listbox.Button className="cursor-pointer  w-full py-3 bg-indigo-50 text-left pl-4 bg-opacity-50 rounded focus:outline-none ">
-          <span className="block truncate capitalize">{value}</span>
-          <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+        <Listbox.Button className="cursor-pointer flex items-center w-48 py-3 text-sm text-gray-50 text-opacity-70 font-medium rounded focus:outline-none ">
+          <span className="block truncate capitalize mr-1">
+            {sortText(value)}
+          </span>
+          <span className="flex items-center pr-2 pointer-events-none">
             <SelectorIcon
               className="w-5 h-5 text-gray-400"
               aria-hidden="true"
@@ -39,7 +55,7 @@ function Dropdown({ options, onChange, value }) {
                         selected ? "font-medium" : "font-normal"
                       } block truncate`}
                     >
-                      {option}
+                      {sortText(option)}
                     </span>
                     {selected ? (
                       <span
@@ -59,4 +75,4 @@ function Dropdown({ options, onChange, value }) {
   );
 }
 
-export default Dropdown;
+export default SortByDropdown;

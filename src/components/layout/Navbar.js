@@ -26,7 +26,7 @@ export default function Navbar() {
 
  return (
   <nav className="rounded-b-md overflow-hidden bg-gray-800 h-16 py-4 px-10 flex items-center justify-between z-10 shadow-lg fixed top-0 left-0 w-full">
-     <span className="cursor-pointer font-semibold  text-3xl text-gray-200">Product Feedback</span>
+     <Link className="cursor-pointer font-semibold  text-3xl text-gray-200" to="/">Product Feedback</Link>
      <ul className="flex  justify-between font-medium tracking-wider items-center">
         <li><Link to='/' className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</Link></li>
         {!isLoading &&( user  ?

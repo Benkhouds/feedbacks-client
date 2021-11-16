@@ -19,7 +19,7 @@ import UserContext from "../context/user-context";
 function CreatePage({ history }) {
 
   const [feedbackTitle, setFeedbackTitle] = useState("");
-  const [category, setCategory] = useState("feature");
+  const [category, setCategory] = useState("Feature");
   const [details, setDetails] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +33,7 @@ function CreatePage({ history }) {
     try {
       const { data } = await DataService.addFeedback(
         feedbackTitle,
-        category,
+        category.toLowerCase(),
         details,
         user.accessToken
       );
@@ -52,7 +52,7 @@ function CreatePage({ history }) {
   return (
     <Layout>
       <div className="w-1/3 mx-auto">
-        <BackButton />
+        <BackButton className="mb-8"/>
         <FormLayout onSubmit={handleSubmit}>
           <AddIcon />
           <FormTitle text="Create New Feedback" />
@@ -73,7 +73,7 @@ function CreatePage({ history }) {
               subtitle="Choose a category for your feedback"
             />
             <Dropdown
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={setCategory}
               value={category}
               options={["Feature", "UI", "UX", "Enhancement", "Bug"]}
             />
