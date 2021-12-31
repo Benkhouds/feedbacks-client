@@ -1,19 +1,36 @@
+import { ErrorMessage, useField } from 'formik';
 
+function Input({ label, status, ...props }) {
+   const [field, meta] = useField(props);
 
-
-
-function Input({type, onChange ,placeholder, value}) {
- return (
-  <input
-    className="block w-full py-3 px-2 mt-2 text-gray-500 placeholder-gray-400 placeholder-opacity-60 bg-indigo-50 rounded  bg-opacity-50  focus:outline-none focus:ring-indigo-100 focus:ring-2 focus:bg-opacity-80 "
-    type={type}
-    placeholder={placeholder || ''}
-    onChange={onChange}
-    autoComplete="on"
-    value={value}
-    required
-  />
- )
+   return (
+      <div className="my-1 w-full">
+         <label>
+            {label ? label : ''}
+            <input
+               className={`block w-full py-3 px-2 mt-2 mb-1 text-gray-500 
+               placeholder-gray-400 placeholder-opacity-60 bg-light rounded   
+               focus:outline-none focus:ring-blue-700 focus:ring-1 shadow
+                ${
+                   ((status && status.error) || (meta.touched && meta.error)) &&
+                   'input-error'
+                }`}
+               {...field}
+               {...props}
+               autoComplete="on"
+            />
+         </label>
+         <p className={`invisible ${meta.touched && meta.error && 'hidden'}`}>
+            some text
+         </p>
+         {console.log(meta)}
+         <ErrorMessage
+            name={field.name}
+            component="div"
+            className="text-error"
+         />
+      </div>
+   );
 }
 
-export default Input
+export default Input;

@@ -1,10 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600&family=Montserrat+Alternates:wght@400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+   .bg-growing-underline {
+      background-size: 100% 0.15rem;
+      background-position: 0 95%;
+      @apply bg-no-repeat transition-all duration-200;
+   }
+   .bg-growing-underline:hover {
+      background-size: 100% 40%;
+      background-opacity: 0.7;
+   }
+   .bg-growing-underline:focus {
+      background-size: 100% 40%;
+      background-opacity: 0.7;
+   }
+   .layered-background {
+      background-image: url('../assets/background-header.png');
+   }
+}
 
+.nav-link {
+   @apply px-2 py-2 my-2 rounded text-sm font-medium  bg-gradient-to-br from-blue-300 to-purple-300 hover:bg-opacity-50 bg-growing-underline text-dark;
+}
 .error-message {
-
    @apply bg-red-400 w-full p-3 text-center mb-4 block font-medium text-white rounded;
+}
 
+.input-error {
+   @apply ring-2 ring-red-400;
+}
+.text-error {
+   @apply text-red-500;
 }

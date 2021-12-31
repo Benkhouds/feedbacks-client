@@ -1,121 +1,166 @@
-import {useState, useContext} from 'react'
-import { AuthService } from '../services'
-import {Link, Redirect} from 'react-router-dom'
-import UserContext from '../context/user-context'
-import { FormLayout, Layout, FormTitle, FormControl, FormButton } from '../components'
+import { useContext } from 'react';
+import { Formik, Form } from 'formik';
+import { ToastContainer, toast } from 'react-toastify';
+import UserContext from '../context/user-context';
+import { AuthService } from '../services';
+import { Link, Redirect } from 'react-router-dom';
+import { Layout, FormTitle, Input, FormButton } from '../components';
+import registerValidation from '../validations/registerValidation';
 
-export default function RegisterPage({history}) {
-  const {user , setUser, isLoading : userLoading} = useContext(UserContext)
+const options = {
+   position: 'top-center',
+   autoClose: 2000,
+   hideProgressBar: false,
+   closeOnClick: true,
+   pauseOnHover: true,
+   draggable: true,
+   progress: undefined,
+};
+export default function RegisterPage({ history }) {
+   const { user, setUser, isLoading: userLoading } = useContext(UserContext);
 
-  const [username, setUsername] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmedPassword, setConfirmedPassword] = useState('')
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+   const registerHandler = async (values, setSubmitting, setStatus) => {
+      const { username, firstName, lastName, email, password } = values;
+      setSubmitting(true);
 
-  const registerHandler= async (e)=>{
-    e.preventDefault()
-    if(password !== confirmedPassword){
-        setPassword('')
-        setConfirmedPassword('')
-        setTimeout(setError('') ,2000)
-        setError('Passwords do not match')
-        return 
-    }
-    setIsLoading(true)
-    try {
-        const {data} = await AuthService.register(username,firstName, lastName , email , password)
-        if(data.success){
-          setUser(data.user)
-          history.push('/')
-        }
-    } catch (err) {
-      setError(err.response?.data?.error || 'error has occurred')
-        setIsLoading(false)
-    }
-  }
+      const statusToast = toast.loading('Please wait...', options);
 
- 
-  if(userLoading){
-    return <div>Page Loader ...</div>
-  }
-  else if(user){
-    return <Redirect to="/"/>
- }
- else{
- return (
-  <Layout>
-  <div className="w-1/3 mx-auto">
-    <FormLayout onSubmit={registerHandler}>
-      <FormTitle text='Register'/>
-      {error && <span className="error-message">{error}</span>}
-      <div className='flex space-x-4'>
-      <FormControl
-          title="First Name"
-          placeholder="Enter first name"
-          id="fname"
-          type="text"
-          onChange={(e)=>setFirstName(e.target.value)}
-          value={firstName}
-      />
-      <FormControl
-          title="Last Name"
-          placeholder="Enter last name"
-          id="lname"
-          type="text"
-          onChange={(e)=>setLastName(e.target.value)}
-          value={lastName}
-      />
+      try {
+         const { data } = await AuthService.register(
+            username,
+            firstName,
+            lastName,
+            email,
+            password
+         );
+         if (data.success) {
+            setTimeout(() => {
+               toast.update(statusToast, {
+                  render: 'All is good',
+                  autoClose: 1000,
+                  type: 'success',
+                  closeButton: true,
+                  isLoading: false,
+               });
+            }, 1000);
+            setTimeout(() => {
+               setUser(data.user);
+            }, 2000);
+         }
+      } catch (err) {
+         setStatus(err.response?.data?.error);
+         toast.update(statusToast, {
+            render: 'Email already exists',
+            autoClose: 1000,
+            type: 'error',
+            closeButton: true,
+            isLoading: false,
+         });
+      } finally {
+         setSubmitting(false);
+      }
+   };
 
-</div>
-      <FormControl
-          title="Username"
-          placeholder="Enter username"
-          id="username"
-          type="text"
-          onChange={(e)=>setUsername(e.target.value)}
-          value={username}
-      />
-      <FormControl
-          title="Email"
-          placeholder="Enter your email"
-          id="email"
-          type="email"
-          onChange={(e)=>setEmail(e.target.value)}
-          value={email}
-      />
-      <FormControl
-          title="Password"
-          placeholder="Enter password"
-          id="password"
-          type="password"
-          onChange={(e)=>setPassword(e.target.value)}
-          value={password}
-      />
-      <FormControl
-          title="Confirm Password"
-          placeholder="Confirm password"
-          id="confirm-password"
-          type="password"
-          onChange={(e)=>setConfirmedPassword(e.target.value)}
-          value={confirmedPassword}
-      />
-      <div className="flex items-end justify-between mt-6">
-        <div>
-            {isLoading && <p>Loading...</p>}
-            <span className="text-gray-400 text-sm">
-                Already have an account? <Link to="/login" className="font-bold text-blue-500 hover:underline">Login</Link>
-            </span>
-        </div>
-         <FormButton className="bg-black ">Register</FormButton>
-      </div>
-    </FormLayout>
-  </div>
-</Layout>
-)
-  
-}
+   if (userLoading) {
+      return <div>Page Loader ...</div>;
+   } else if (user) {
+      return <Redirect to="/" />;
+   } else {
+      return (
+         <Layout>
+            <ToastContainer
+               position="top-center"
+               autoClose={3000}
+               hideProgressBar={false}
+               newestOnTop={false}
+               closeOnClick
+               rtl={false}
+               draggable
+            />
+
+            <div className="w-2/5 mt-4 mx-auto bg-white overflow-hidden flex shadow  sm:rounded md:rounded-lg">
+               <Formik
+                  initialValues={{
+                     firstName: '',
+                     lastName: '',
+                     username: '',
+                     email: '',
+                     password: '',
+                     confirmPassword: '',
+                  }}
+                  validationSchema={registerValidation}
+                  onSubmit={(values, { setSubmitting, setStatus }) =>
+                     registerHandler(values, setSubmitting, setStatus)
+                  }
+               >
+                  {({ isSubmitting, isValid, status }) => (
+                     <div className="w-full px-8 my-10">
+                        <FormTitle text="Register" />
+                        <Form className=" py-4">
+                           <div className="flex space-x-4">
+                              <Input
+                                 status={status}
+                                 label="First Name"
+                                 name="firstName"
+                                 type="text"
+                              />
+                              <Input
+                                 status={status}
+                                 label="Last Name"
+                                 name="lastName"
+                                 type="text"
+                              />
+                           </div>
+
+                           <Input
+                              status={status}
+                              label="Username"
+                              name="username"
+                              type="text"
+                           />
+                           <Input
+                              status={status}
+                              label="Email"
+                              name="email"
+                              type="email"
+                           />
+                           <Input
+                              status={status}
+                              label="Password"
+                              name="password"
+                              type="password"
+                           />
+                           <Input
+                              status={status}
+                              label="Confirm Password"
+                              name="confirmPassword"
+                              type="password"
+                           />
+                           <div className="flex items-center justify-between mt-4">
+                              <div>
+                                 <span className="text-gray-400 text-sm">
+                                    Already have an account?{' '}
+                                    <Link
+                                       to="/login"
+                                       className="font-bold text-dark hover:underline"
+                                    >
+                                       Login
+                                    </Link>
+                                 </span>
+                              </div>
+                              <FormButton
+                                 disabled={!isValid || isSubmitting}
+                                 className="bg-dark px-5 focus:ring-2 focus:ring-offset-2 focus:ring-dark "
+                              >
+                                 Register
+                              </FormButton>
+                           </div>
+                        </Form>
+                     </div>
+                  )}
+               </Formik>
+            </div>
+         </Layout>
+      );
+   }
 }

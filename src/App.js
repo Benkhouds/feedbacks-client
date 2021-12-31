@@ -1,5 +1,5 @@
 import {BrowserRouter as Router , Switch, Route} from 'react-router-dom'
-import {LoginPage, RegisterPage, ProfilePage, HomePage, CreatePage, FeedbackPage} from './pages/index'
+import {LoginPage, RegisterPage, ProfilePage, HomePage, CreatePage, FeedbackPage, RoadmapPage} from './pages/index'
 import PrivateRoute from './routes/PrivateRoute'
 
 export default function App() {
@@ -8,6 +8,7 @@ export default function App() {
        <div>
           <Switch>
              <Route exact path="/" component={HomePage} />
+             <Route exact path="/roadmap" component={RoadmapPage} />
              <PrivateRoute exact path="/profile" component={ProfilePage} />
              <PrivateRoute exact path="/feedbacks/:id" component={FeedbackPage} />
              <PrivateRoute exact path="/create" component={CreatePage} />

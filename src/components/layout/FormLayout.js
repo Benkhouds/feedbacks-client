@@ -1,12 +1,11 @@
-
-
-
-function FormLayout({children, classes, onSubmit}) {
- return (
-      <form autoComplete="on" onSubmit={onSubmit} className={`relative bg-white shadow  sm:rounded md:rounded-lg  p-8  ${classes}`}>
-        {children}
-      </form>
- )
+function FormLayout({ children, classes }) {
+   return (
+      <div
+         className={`relative bg-white shadow  sm:rounded md:rounded-lg  p-8  ${classes}`}
+      >
+         {children}
+      </div>
+   );
 }
 
-export default FormLayout
+export default FormLayout;

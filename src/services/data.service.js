@@ -10,6 +10,13 @@ export default class DataService{
         }
         return apiRoutes.get(`/feedbacks/?category=${category}&sort=${sort}`,{cancelToken} )
      }
+     static async getApprovedFeedbacks(cancelToken, accessToken){
+        if(accessToken){
+            return apiRoutes.get(`/feedbacks/protected/approved`,
+            {cancelToken, ...apiHeader(accessToken)} )             
+        }
+        return apiRoutes.get('/feedbacks/approved',{cancelToken} )
+     }
      static async getUserData(accessToken){
         return apiRoutes.post('/auth/refresh-token',{},apiHeader(accessToken))
      }
@@ -17,16 +24,16 @@ export default class DataService{
          return apiRoutes.get(`/feedbacks/${id}`,{cancelToken,  ...apiHeader(accessToken)})
      }
      static async addFeedback(title, category, details, accessToken){
-         return apiRoutes.post('/feedbacks/', {title , category, details}, apiHeader(accessToken))
+         return apiRoutes.post('/feedbacks', {title , category, details}, apiHeader(accessToken))
      }
-     static async addComment(id, content, accessToken){
-         return apiRoutes.post(`/feedbacks/${id}`, {content}, apiHeader(accessToken))
+     static async addComment(id, content,  accessToken){
+         return apiRoutes.post(`/feedbacks/${id}/comments`, {content},apiHeader(accessToken))
      }
      static async upVote(id, accessToken){
          return apiRoutes.patch(`/feedbacks/${id}/vote`,{}, apiHeader(accessToken))
      }
      static async reply(postId,commentId, content,accessToken){
-         return apiRoutes.post(`${postId}/feedbacks/comments/${commentId}`, {content}, apiHeader(accessToken))
+         return apiRoutes.post(`/feedbacks/${postId}/comments/${commentId}/replies`, {content}, apiHeader(accessToken))
      }
 
 }
